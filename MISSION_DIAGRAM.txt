@@ -1,0 +1,244 @@
+# DARPA LIFT Challenge Mission Layout
+
+## Top-Down View (Looking Down from Above)
+
+```
+North (X-axis) ↑
+
+                    ⭐ Waypoint 4 (5 nm)
+                    │  9,260m north
+                    │  350 ft altitude
+                    │  NO PAYLOAD
+                    │
+                    ▼ (Drone returns south after reaching WP4)
+                    
+                    🎯 PAYLOAD DROPOFF (4 nm)
+                    │  7,408m north
+                    │  GROUND LEVEL
+                    │  *** RELEASE PAYLOAD HERE ***
+                    │
+                    ▲ (Drone continues north after dropping payload)
+                    
+                    ⭐ Waypoint 3 (3 nm)
+                    │  5,556m north
+                    │  350 ft altitude
+                    │  WITH PAYLOAD
+                    │
+                    
+                    ⭐ Waypoint 2 (2 nm)  
+                    │  3,704m north
+                    │  350 ft altitude
+                    │  WITH PAYLOAD
+                    │
+                    
+                    ⭐ Waypoint 1 (1 nm)
+                    │  1,852m north
+                    │  350 ft altitude
+                    │  WITH PAYLOAD
+                    │
+                    ▲ (Vertical takeoff)
+                    │
+START/FINISH → 🟡 LANDING ZONE (0 nm)
+                    0m north
+                    10 ft radius circle
+                    TAKEOFF and LAND here
+
+═══════════════════════════════════════════════════════════
+Legend:
+⭐ = Waypoint marker (fly through)
+🎯 = Payload dropoff zone (descend, release, climb)
+🟡 = Takeoff/Landing zone (10 ft radius)
+│  = Flight path
+▲  = Direction of flight
+```
+
+## Side View (Looking from the West)
+
+```
+Altitude
+   ↑
+   │
+400'│- - - - - - - - - - - - - - - - - - - - - - - - -  ← MAX altitude (RED)
+   │                                                      (121.92m)
+   │
+350'│═══⭐═══⭐═══⭐═════════════════⭐══════════════════  ← TARGET altitude (GREEN)
+   │   │   │   │                 │                       (106.68m ± 15.24m)
+   │   WP1 WP2 WP3               WP4
+   │                              │
+   │                              │
+300'│- - - - - - - - - - - - - - -│- - - - - - - - - -  ← MIN altitude (RED)
+   │                              │                       (91.44m)
+   │                              │
+   │                              │
+   │                              ▼
+   │                         ┌─────────┐
+   │   ▲                     │ RETURN  │
+   │   │                     │  HOME   │
+   │   │                     └─────────┘
+   │   │                          │
+   │   │                          │
+   │   │                          ▼
+ 0'│═══╪═══════════🎯════════════🟡══════════  ← GROUND
+   │  START      DROPOFF       LAND
+   │  (0nm)       (4nm)         (0nm)
+   └──┴────────────┴─────────────┴─────────────→ Distance
+      0          7.4km         9.3km
+
+Mission Segments:
+1. TAKEOFF:     0nm → 350 ft vertically (WITH payload)
+2. SEGMENT 1:   0nm → 1nm at 350 ft (WITH payload)
+3. SEGMENT 2:   1nm → 2nm at 350 ft (WITH payload)  
+4. SEGMENT 3:   2nm → 3nm at 350 ft (WITH payload)
+5. SEGMENT 4:   3nm → 4nm at 350 ft (WITH payload)
+6. DROPOFF:     Descend to 0 ft, RELEASE PAYLOAD, climb to 350 ft
+7. SEGMENT 5:   4nm → 5nm at 350 ft (WITHOUT payload)
+8. RETURN:      5nm → 0nm at 350 ft (WITHOUT payload)
+9. LANDING:     350 ft → 0 ft vertically in 10 ft circle
+```
+
+## Mission Timeline (Example)
+
+```
+Time    Event                           Altitude    Payload    Location
+═══════════════════════════════════════════════════════════════════════
+0:00    Start Mission                   0 ft        YES        0 nm
+0:30    Arm & Takeoff                   0 ft        YES        0 nm
+1:00    Climbing                        175 ft      YES        0 nm
+1:30    Reached cruise altitude         350 ft      YES        0 nm
+2:00    Flying to WP1                   350 ft      YES        0.5 nm
+3:00    Pass WP1                        350 ft      YES        1 nm
+5:00    Pass WP2                        350 ft      YES        2 nm
+7:00    Pass WP3                        350 ft      YES        3 nm
+9:00    Approaching dropoff             350 ft      YES        3.5 nm
+10:00   Arrive at dropoff               350 ft      YES        4 nm
+10:30   Descending                      175 ft      YES        4 nm
+11:00   On ground                       0 ft        YES        4 nm
+11:30   *** PAYLOAD RELEASED ***        0 ft        NO         4 nm
+12:00   Climbing                        175 ft      NO         4 nm
+12:30   Back at cruise                  350 ft      NO         4 nm
+13:00   Flying to WP4                   350 ft      NO         4.5 nm
+14:30   Reached WP4                     350 ft      NO         5 nm
+15:00   Turning back                    350 ft      NO         5 nm
+17:00   Returning                       350 ft      NO         3 nm
+19:00   Returning                       350 ft      NO         1 nm
+20:30   Above landing zone              350 ft      NO         0 nm
+21:00   Descending                      175 ft      NO         0 nm
+22:00   Final approach                  50 ft       NO         0 nm
+22:30   TOUCHDOWN!                      0 ft        NO         0 nm
+23:00   Motors disarmed                 0 ft        NO         0 nm
+═══════════════════════════════════════════════════════════════════════
+✓ Mission Complete: 23 minutes (under 30 minute limit)
+✓ Total distance: 5 nautical miles
+✓ Payload carried: 4 nautical miles
+✓ Landing accuracy: Within 10 ft radius
+```
+
+## Coordinate System Reference
+
+```
+PX4 uses NED (North-East-Down) coordinates:
+
+        North (+X)
+            ↑
+            │
+            │
+West ←──────┼──────→ East (+Y)
+            │
+            │
+            ↓
+        South
+
+Down (+Z) points INTO the ground
+Up = NEGATIVE Z values
+
+Examples:
+- (1852, 0, -106.68)  = 1 nm north, 350 ft altitude
+- (0, 100, -106.68)   = 100m east, 350 ft altitude  
+- (0, 0, 0)           = Origin, ground level
+- (0, 0, -106.68)     = Origin, 350 ft altitude
+```
+
+## Waypoint Coordinates Reference
+
+```
+┌────────────┬──────────────┬──────────────┬──────────────┬──────────────┐
+│ Waypoint   │ X (North)    │ Y (East)     │ Z (Down)     │ Altitude     │
+├────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ Start      │    0.0 m     │    0.0 m     │    0.0 m     │   0 ft       │
+│ Takeoff    │    0.0 m     │    0.0 m     │ -106.68 m    │ 350 ft       │
+│ WP1 (1nm)  │ 1,852.0 m    │    0.0 m     │ -106.68 m    │ 350 ft       │
+│ WP2 (2nm)  │ 3,704.0 m    │    0.0 m     │ -106.68 m    │ 350 ft       │
+│ WP3 (3nm)  │ 5,556.0 m    │    0.0 m     │ -106.68 m    │ 350 ft       │
+│ Dropoff    │ 7,408.0 m    │    0.0 m     │    0.0 m     │   0 ft       │
+│ WP4 (5nm)  │ 9,260.0 m    │    0.0 m     │ -106.68 m    │ 350 ft       │
+│ Landing    │    0.0 m     │    0.0 m     │    0.0 m     │   0 ft       │
+└────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+
+Conversions:
+- 1 nautical mile = 1,852 meters
+- 350 feet = 106.68 meters
+- ±50 feet tolerance = ±15.24 meters
+- 10 foot landing circle = 3.05 meter radius
+```
+
+## Altitude Safety Envelope
+
+```
+     ▲
+     │
+400' │ ╔════════════════════════════════════════╗
+     │ ║  VIOLATION ZONE (TOO HIGH)            ║
+     │ ║  Will fail mission requirements       ║
+     │ ╚════════════════════════════════════════╝
+     │ ┌────────────────────────────────────────┐
+     │ │                                        │
+     │ │         ACCEPTABLE ZONE                │
+350' │ │ ─ ─ ─ ─ ─ TARGET ─ ─ ─ ─ ─ ─ ─ ─ ─   │
+     │ │                                        │
+     │ │                                        │
+     │ └────────────────────────────────────────┘
+300' │ ╔════════════════════════════════════════╗
+     │ ║  VIOLATION ZONE (TOO LOW)             ║
+     │ ║  Will fail mission requirements       ║
+     │ ╚════════════════════════════════════════╝
+     │
+   0'└──────────────────────────────────────────
+     
+Target:   350 ft (106.68 m)
+Maximum:  400 ft (121.92 m)
+Minimum:  300 ft (91.44 m)
+Tolerance: ±50 ft (±15.24 m)
+```
+
+## Scoring Formula
+
+```
+Primary Metric = Payload Weight / Aircraft Weight
+
+Example:
+- Aircraft weight: 50 lbs
+- Payload weight: 120 lbs
+- Score: 120 / 50 = 2.4
+
+DARPA's target is a 4:1 ratio (payload 4x heavier than aircraft)
+
+Tiebreakers (in order):
+1. Highest payload weight
+2. Fastest completion time
+```
+
+## Key Mission Rules
+
+```
+✓ Aircraft must weigh < 55 lbs (without payload)
+✓ Payload must be ≥ 110 lbs (Olympic barbell plates)
+✓ Must use largest plate combinations available
+✓ All plates co-located (no distributed payload)
+✓ VTOL takeoff and landing (no runway/launch aids)
+✓ Maintain VLOS (Visual Line Of Sight) at all times
+✓ Altitude: 350 ft ± 50 ft during cruise
+✓ Payload must touch ground before release
+✓ Land within 10 ft radius circle
+✓ Complete mission in < 30 minutes
+✓ Controlled landing (no damage requiring repairs)
+```
